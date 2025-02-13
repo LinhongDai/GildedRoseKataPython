@@ -20,31 +20,59 @@ class GildedRose(object):
 
     def update_quality(self):
         for item in self.items:
-            if item.name != "Aged Brie" and item.name != "Backstage passes to a TAFKAL80ETC concert":
-                if item.quality > 0:
-                    if item.name != "Sulfuras, Hand of Ragnaros":
-                        item.quality = item.quality - 1
-            else:
-                if item.quality < 50:
-                    item.quality = item.quality + 1
-                    if item.name == "Backstage passes to a TAFKAL80ETC concert":
-                        if item.sell_in < 11:
-                            if item.quality < 50:
-                                item.quality = item.quality + 1
-                        if item.sell_in < 6:
-                            if item.quality < 50:
-                                item.quality = item.quality + 1
-            if item.name != "Sulfuras, Hand of Ragnaros":
+            # update the sell_in date
+            if item.name != "Sulfuras":
                 item.sell_in = item.sell_in - 1
+
+            # update the quality
             if item.sell_in < 0:
                 if item.name != "Aged Brie":
-                    if item.name != "Backstage passes to a TAFKAL80ETC concert":
-                        if item.quality > 0:
-                            if item.name != "Sulfuras, Hand of Ragnaros":
-                                print(item.quality)
-                                item.quality = item.quality - 1
+                    if item.name != "Backstage passes":
+                        if item.name != "Sulfuras":
+                            if item.name == "Conjured":
+                                if item.quality > 1:
+                                    item.quality -= 4
+                            else:
+                                if item.quality > 0:
+                                    item.quality -= 2
                     else:
                         item.quality = item.quality - item.quality
                 else:
                     if item.quality < 50:
                         item.quality = item.quality + 1
+
+            else:
+                if item.name != "Aged Brie" and item.name != "Backstage passes":
+                    if item.name != "Sulfuras":
+                        if item.name == "Conjured":
+                            if item.quality > 1:
+                                item.quality -= 2
+                            else:
+                                item.quality = 0
+                        else:
+                            item.quality -= 1
+                        
+                else:
+                    if item.quality < 50:
+                        item.quality = item.quality + 1
+                        if item.name == "Backstage passes":
+                            if item.sell_in < 11:
+                                if item.quality < 50:
+                                    item.quality = item.quality + 1
+                            if item.sell_in < 6:
+                                if item.quality < 50:
+                                    item.quality = item.quality + 1
+
+    def get_items(self):
+        new_items = []
+        for item in self.items:
+            new_items.append(item.name)
+        return new_items
+    
+    def apply_discount(self):
+        for item in self.items:
+            item.quality *= 0.8
+        return self.items
+
+
+            
