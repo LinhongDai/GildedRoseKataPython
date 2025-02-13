@@ -23,32 +23,33 @@ class GildedRoseTest(unittest.TestCase):
         self.assertEquals(["Sulfuras"], all_items)
 
 
-    def test_aged_grie_should_not_decrease_quality(self):
-        items = [Item("Aged Brie", 10, 30)]
+    def test_backstage_passes_quality_should_drops_to_zero_after_concert(self):
+        items = [Item("Backstage passes", 0, 40)]
+        gilded_rose = GildedRose(items)
+        gilded_rose.update_quality()
+        backstage_passes_item = items[0]
+        self.assertEquals(0, backstage_passes_item.quality)
+        self.assertEquals(-1, backstage_passes_item.sell_in)
+        self.assertEquals("Backstage passes", backstage_passes_item.name)
+        
+    def test_aged_grie_quality_should_not_decrease_buy_two_if_sell_by_date_has_passed(self):
+        items = [Item("Aged Brie", -1, 30)]
         gilded_rose = GildedRose(items)
         gilded_rose.update_quality()
         aged_brie_item = items[0]
-        self.assertEquals(29, aged_brie_item.quality)
-        self.assertEquals(4, aged_brie_item.sell_in)
+        self.assertEquals(31, aged_brie_item.quality)
+        self.assertEquals(-2, aged_brie_item.sell_in)
         self.assertEquals("Aged Brie", aged_brie_item.name)
         
-    def test_quality_should_decrease_buy_two_if_sell_by_date_has_passed(self):
-        items = [Item("Baby Seat", -1, 30)]
+    def test_aged_grie_should_only_increase_by_1(self):
+        items = [Item("Aged Brie", 0, 1)]
         gilded_rose = GildedRose(items)
         gilded_rose.update_quality()
-        baby_seat_item = items[0]
-        self.assertEquals(29, baby_seat_item.quality)
-        self.assertEquals(-2, baby_seat_item.sell_in)
-        self.assertEquals("Baby Seat", baby_seat_item.name)
-        
-    def test_quality_never_be_negative(self):
-        items = [Item("Mug", -1, 1)]
-        gilded_rose = GildedRose(items)
-        gilded_rose.update_quality()
-        mug_item = items[0]
-        self.assertEquals(-1, mug_item.quality)
-        self.assertEquals(-2, mug_item.sell_in)
-        self.assertEquals("Mug", mug_item.name)
+        aged_brie_item = items[0]
+        self.assertEquals(2, aged_brie_item.quality)
+        self.assertEquals(-1, aged_brie_item.sell_in)
+        self.assertEquals("Aged Brie", aged_brie_item.name)
+
 
     # example of test that checks for syntax errors
     def test_update_sell_date(self):
